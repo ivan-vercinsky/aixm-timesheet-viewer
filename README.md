@@ -27,10 +27,16 @@ first, then `npm run push`.
 
 ## Architecture: resolution layer vs. calendar component
 
-The code separates the two responsibilities a future EDS component split needs:
+Full architecture (layer boundaries, Timesheet control API, live-preview
+data flow): **[DESIGN.md](DESIGN.md)**.
 
-- **DNOTAM schedule-resolution layer** (`src/lib/`) — interprets AIXM/DNOTAM
-  semantics and produces normalized, provenance-tagged intervals:
+The code separates the two responsibilities a future EDS component split
+needs — both live inside the standalone **Timesheet control**
+(`src/timesheet/`), which the application uses only through its public
+`index.js`:
+
+- **DNOTAM schedule-resolution layer** (`src/timesheet/lib/`) — interprets
+  AIXM/DNOTAM semantics and produces normalized, provenance-tagged intervals:
   - `aixm.js` — maps AIXM 5.1.1 JSON (`aixm:availability` /
     `aixm:AirportHeliportAvailability` / `aixm:Timesheet`, incl. `aixm:excluded`
     and annotation notes) into the simplified timesheet model.
@@ -45,9 +51,16 @@ The code separates the two responsibilities a future EDS component split needs:
     structural matching of TEMPDELTA groups/timesheets against BASELINE — AIXM
     itself has no provenance marker), `excluded` subtraction, and
     `resolveResult()` composing the effective schedule.
-- **Calendar component** (`src/components/CalendarWeek.jsx`) — renders lanes of
-  `ScheduleEntry` lists and carries **no AIXM/DNOTAM business logic**. This is
-  the part intended to become a generic EDS schedule component.
+- **Timesheet control** (`src/timesheet/Timesheet.jsx` with
+  `CalendarWeek.jsx` / `TimesheetPanel.jsx`) — a self-contained, prop-driven
+  React component: raw TimeSlices in, calendar + legend + raw timesheet
+  tables out. `CalendarWeek` renders lanes of `ScheduleEntry` lists and
+  carries **no AIXM/DNOTAM business logic**. This directory is the part
+  intended to become a generic EDS schedule component.
+
+Editing a scenario previews **live**: every valid keystroke in the JSON
+editors re-renders the Timesheet instantly; only **Save** writes the
+scenario store, **Cancel** discards the draft.
 
 ## What it shows
 

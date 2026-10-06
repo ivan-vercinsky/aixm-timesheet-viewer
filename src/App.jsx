@@ -1,18 +1,7 @@
-import { useMemo, useState } from 'react';
-import CalendarWeek from './components/CalendarWeek.jsx';
+import { useState } from 'react';
 import ScenarioEditor from './components/ScenarioEditor.jsx';
 import ScenarioList from './components/ScenarioList.jsx';
-import TimesheetPanel from './components/TimesheetPanel.jsx';
-import { addDays, fmtDate, fmtDateTime, weekStartOf } from './lib/timesheet.js';
-import {
-  SOURCE,
-  deriveProvenance,
-  entriesForSlice,
-  normalizeSlice,
-  resolveResult,
-  splitEntries,
-} from './lib/schedule.js';
-import { splitGroups } from './lib/split.js';
+import { Timesheet, fmtDateTime } from './timesheet/index.js';
 import {
   createScenario,
   duplicateScenario,
@@ -34,6 +23,11 @@ const findSlice = (slices, interpretation) =>
 export default function App() {
   const [scenarios, setScenariosRaw] = useState(loadScenarios);
   const [selectedId, setSelectedId] = useState(null);
+  const [editorOpen, setEditorOpen] = useState(false);
+  // Live preview while the editor is open: the last valid parse of each
+  // edited TimeSlice field. Only Save writes to the scenario store; Cancel
+  // (or switching scenarios) simply drops the draft.
+  const [draft, setDraft] = useState(null);
   const [collapsed, setCollapsed] = useState(() => {
     try {
       return localStorage.getItem(SIDEBAR_KEY) === '1';
@@ -56,27 +50,29 @@ export default function App() {
   };
 
   const scenario = scenarios.find((s) => s.id === selectedId) ?? scenarios[0] ?? null;
-  const rawBaseline = scenario ? findSlice(scenario.feature.timeSlices, 'BASELINE') : null;
-  const rawDelta = scenario ? findSlice(scenario.feature.timeSlices, 'TEMPDELTA') : null;
+
+  // Drop any draft when the selection changes (state adjustment during
+  // render, per React docs) — the editor remounts via key={scenario.id}.
+  const [prevScenarioId, setPrevScenarioId] = useState(null);
+  if ((scenario?.id ?? null) !== prevScenarioId) {
+    setPrevScenarioId(scenario?.id ?? null);
+    setDraft(null);
+  }
+
+  const savedBaseline = scenario ? findSlice(scenario.feature.timeSlices, 'BASELINE') : null;
+  const savedDelta = scenario ? findSlice(scenario.feature.timeSlices, 'TEMPDELTA') : null;
+
+  // What the Timesheet shows: the draft (instant preview) while editing,
+  // the saved scenario otherwise.
+  const previewing = editorOpen && draft != null;
+  const rawBaseline =
+    previewing && 'baselineSlice' in draft ? draft.baselineSlice : savedBaseline;
+  const rawDelta = previewing && 'deltaSlice' in draft ? draft.deltaSlice : savedDelta;
+
   const supersedes = scenario?.supersedesBaseline !== false;
   const event = scenario?.event;
   const validityBegin = rawDelta?.validTime?.begin ?? event?.validTime?.begin ?? null;
-
-  const [weekStart, setWeekStart] = useState(() => weekStartOf(new Date()));
-  const [showBaseline, setShowBaseline] = useState(true);
-  const [showDelta, setShowDelta] = useState(true);
-  const [showResult, setShowResult] = useState(true);
-  const [splitOverlaps, setSplitOverlaps] = useState(false);
-  const [editorOpen, setEditorOpen] = useState(false);
-
-  // Snap the calendar to the scenario's validity when the selection or the
-  // edited validity changes (state adjustment during render, per React docs).
-  const snapKey = `${scenario?.id ?? ''}|${validityBegin ?? ''}`;
-  const [prevSnapKey, setPrevSnapKey] = useState('');
-  if (snapKey !== prevSnapKey) {
-    setPrevSnapKey(snapKey);
-    if (validityBegin) setWeekStart(weekStartOf(new Date(validityBegin)));
-  }
+  const validity = rawDelta?.validTime ?? event?.validTime;
 
   // Scenario management
   const selectScenario = (id) => setSelectedId(id);
@@ -123,71 +119,23 @@ export default function App() {
     setScenarios([...scenarios, imported]);
     setSelectedId(imported.id);
   };
-  const updateSelected = (patch) => setScenarios(updateScenario(scenarios, scenario.id, patch));
+  const closeEditor = () => {
+    setEditorOpen(false);
+    setDraft(null);
+  };
   const saveEdits = ({ title, baselineSlice, deltaSlice }) => {
     const timeSlices = [
       baselineSlice && { ...baselineSlice, interpretation: 'BASELINE' },
       deltaSlice && { ...deltaSlice, interpretation: 'TEMPDELTA' },
     ].filter(Boolean);
-    updateSelected({ title, feature: { ...scenario.feature, timeSlices } });
-    setEditorOpen(false);
+    setScenarios(
+      updateScenario(scenarios, scenario.id, {
+        title,
+        feature: { ...scenario.feature, timeSlices },
+      })
+    );
+    closeEditor();
   };
-
-  const weekEnd = addDays(weekStart, 7);
-
-  // Resolution layer: normalize slices, derive TEMPDELTA provenance, expand
-  // to ScheduleEntry lists and compose the effective (RESULT) schedule.
-  const baseline = useMemo(() => normalizeSlice(rawBaseline), [rawBaseline]);
-  const tempdelta = useMemo(
-    () => deriveProvenance(baseline, normalizeSlice(rawDelta)),
-    [baseline, rawDelta]
-  );
-  const baselineEntries = useMemo(
-    () => entriesForSlice(baseline, SOURCE.BASELINE, weekStart, weekEnd),
-    [baseline, weekStart, weekEnd]
-  );
-  const deltaEntries = useMemo(
-    () => entriesForSlice(tempdelta, SOURCE.TEMPDELTA_EVENT, weekStart, weekEnd),
-    [tempdelta, weekStart, weekEnd]
-  );
-  const resultEntries = useMemo(
-    () => resolveResult(baselineEntries, deltaEntries, tempdelta?.validTime, supersedes),
-    [baselineEntries, deltaEntries, tempdelta, supersedes]
-  );
-
-  // Optional alternative view: resolve overlaps between availability groups
-  // of the encoded lanes into non-overlapping fragments (later group wins).
-  const shownBaseline = useMemo(
-    () => (splitOverlaps ? splitEntries(baselineEntries) : baselineEntries),
-    [baselineEntries, splitOverlaps]
-  );
-  const shownDelta = useMemo(
-    () => (splitOverlaps ? splitEntries(deltaEntries) : deltaEntries),
-    [deltaEntries, splitOverlaps]
-  );
-
-  // The same split computed at the Timesheet level (the alternative AIXM
-  // encoding), shown in the raw timesheet panels.
-  const panelBaseline = useMemo(
-    () =>
-      splitOverlaps && baseline ? { ...baseline, groups: splitGroups(baseline.groups) } : baseline,
-    [baseline, splitOverlaps]
-  );
-  const panelDelta = useMemo(
-    () =>
-      splitOverlaps && tempdelta
-        ? { ...tempdelta, groups: splitGroups(tempdelta.groups) }
-        : tempdelta,
-    [tempdelta, splitOverlaps]
-  );
-
-  const lanes = [
-    { key: 'baseline', title: 'BASELINE schedule', entries: shownBaseline, visible: showBaseline && !!baseline },
-    { key: 'delta', title: 'TEMPDELTA (NOTAM)', entries: shownDelta, visible: showDelta && !!tempdelta },
-    { key: 'result', title: 'RESULT (effective)', entries: resultEntries, visible: showResult },
-  ];
-
-  const validity = tempdelta?.validTime ?? event?.validTime;
 
   return (
     <div className="layout">
@@ -249,8 +197,9 @@ export default function App() {
               <ScenarioEditor
                 key={scenario.id}
                 scenario={scenario}
+                onPreview={(patch) => setDraft((d) => ({ ...d, ...patch }))}
                 onSave={saveEdits}
-                onCancel={() => setEditorOpen(false)}
+                onCancel={closeEditor}
               />
             ) : (
               <div className="edit-bar">
@@ -260,91 +209,15 @@ export default function App() {
               </div>
             )}
 
-            <div className="toolbar">
-              <div className="weeknav">
-                <button onClick={() => setWeekStart(addDays(weekStart, -7))}>‹ prev</button>
-                <span className="weeknav-label">
-                  Week {fmtDate(weekStart)} – {fmtDate(addDays(weekStart, 6))} (UTC)
-                </span>
-                <button onClick={() => setWeekStart(addDays(weekStart, 7))}>next ›</button>
-                <button
-                  disabled={!validityBegin}
-                  onClick={() => setWeekStart(weekStartOf(new Date(validityBegin)))}
-                >
-                  NOTAM week
-                </button>
-              </div>
-              <div className="legend">
-                {baseline && (
-                  <label className="legend-item">
-                    <input
-                      type="checkbox"
-                      checked={showBaseline}
-                      onChange={(e) => setShowBaseline(e.target.checked)}
-                    />
-                    <span className="swatch swatch-baseline" /> BASELINE
-                  </label>
-                )}
-                <label className="legend-item">
-                  <input
-                    type="checkbox"
-                    checked={showDelta}
-                    onChange={(e) => setShowDelta(e.target.checked)}
-                  />
-                  <span className="swatch swatch-delta" /> TEMPDELTA
-                </label>
-                <label className="legend-item">
-                  <input
-                    type="checkbox"
-                    checked={showResult}
-                    onChange={(e) => setShowResult(e.target.checked)}
-                  />
-                  <span className="swatch swatch-result" /> RESULT (effective)
-                </label>
-                <label
-                  className="legend-item"
-                  title="Show the encoded lanes in the alternative non-overlapping form: overlapping availability groups are split into fragments, the later (exception) group prevailing"
-                >
-                  <input
-                    type="checkbox"
-                    checked={splitOverlaps}
-                    onChange={(e) => setSplitOverlaps(e.target.checked)}
-                  />
-                  split overlapping groups
-                </label>
-                <span className="legend-item">
-                  <span className="swatch swatch-copied" /> copied from BASELINE
-                </span>
-                <span className="legend-item">
-                  <span className="swatch swatch-inactive" /> explicitly INACTIVE / CLOSED
-                </span>
-                <span className="legend-item">
-                  <span className="swatch swatch-validity" /> NOTAM validity
-                </span>
-              </div>
-            </div>
-
-            <CalendarWeek
-              weekStart={weekStart}
-              lanes={lanes}
-              validity={tempdelta?.validTime}
+            <Timesheet
+              baselineSlice={rawBaseline}
+              deltaSlice={rawDelta}
               supersedes={supersedes}
-            />
-
-            {scenario.note && <p className="hint">{scenario.note}</p>}
-
-            <div className="panels">
-              {panelBaseline && (
-                <TimesheetPanel
-                  title="BASELINE · timesheets"
-                  kind="baseline"
-                  slice={panelBaseline}
-                />
-              )}
-              {panelDelta && (
-                <TimesheetPanel title="TEMPDELTA · timesheets" kind="delta" slice={panelDelta} />
-              )}
-            </div>
+              defaultValidity={event?.validTime}
+              snapKey={scenario.id}
+            >
+              {scenario.note && <p className="hint">{scenario.note}</p>}
+            </Timesheet>
           </>
         )}
       </div>

@@ -11,7 +11,7 @@ import {
   serializeScenario,
   updateScenario,
 } from './store.js';
-import { normalizeSlice } from './schedule.js';
+import { normalizeSlice } from '../timesheet/lib/schedule.js';
 
 function fakeStorage(initial = {}) {
   const data = { ...initial };

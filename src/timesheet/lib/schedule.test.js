@@ -13,14 +13,14 @@ import {
 } from './schedule.js';
 import { weekStartOf, addDays } from './timesheet.js';
 
-import saaActExtension from '../data/examples/01-saa-act-extension.json';
-import saaActNight from '../data/examples/02-saa-act-night.json';
-import adClsRunway from '../data/examples/03-ad-cls-runway.json';
-import svcHrsReduced from '../data/examples/04-svc-hrs-reduced.json';
-import saaNewTda from '../data/examples/05-saa-new-tda.json';
-import adAhpHospital from '../data/examples/06-ad-ahp-hospital.json';
-import saaActCopyOnly from '../data/examples/07-saa-act-copy-only.json';
-import svcHrsIntermittent from '../data/examples/08-svc-hrs-intermittent.json';
+import saaActExtension from '../../data/examples/01-saa-act-extension.json';
+import saaActNight from '../../data/examples/02-saa-act-night.json';
+import adClsRunway from '../../data/examples/03-ad-cls-runway.json';
+import svcHrsReduced from '../../data/examples/04-svc-hrs-reduced.json';
+import saaNewTda from '../../data/examples/05-saa-new-tda.json';
+import adAhpHospital from '../../data/examples/06-ad-ahp-hospital.json';
+import saaActCopyOnly from '../../data/examples/07-saa-act-copy-only.json';
+import svcHrsIntermittent from '../../data/examples/08-svc-hrs-intermittent.json';
 
 const iso = (d) => d.toISOString().slice(0, 16);
 const span = (e) => `${iso(e.start)}→${iso(e.end)}`;

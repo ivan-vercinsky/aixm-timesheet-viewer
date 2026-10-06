@@ -7,7 +7,7 @@ import {
   normalizeSlice,
   splitEntries,
 } from './schedule.js';
-import adAhpHospital from '../data/examples/06-ad-ahp-hospital.json';
+import adAhpHospital from '../../data/examples/06-ad-ahp-hospital.json';
 
 const row = (ts) =>
   `${ts.startDate ?? 'any'}..${ts.endDate ?? 'any'} ${ts.day} ${ts.startTime}-${ts.endTime}`;

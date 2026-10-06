@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { asArray, parseAixmTimesheet, parseAvailabilityList } from './aixm.js';
-import adAhpHospital from '../data/examples/06-ad-ahp-hospital.json';
+import adAhpHospital from '../../data/examples/06-ad-ahp-hospital.json';
 
 const tempdelta = adAhpHospital.feature.timeSlices.find((s) => s.interpretation === 'TEMPDELTA');
 const baseline = adAhpHospital.feature.timeSlices.find((s) => s.interpretation === 'BASELINE');

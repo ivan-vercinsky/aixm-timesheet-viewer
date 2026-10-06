@@ -11,11 +11,16 @@ const sliceText = (scenario, interpretation) => {
 
 /**
  * Per-scenario editor: title and BASELINE/TEMPDELTA TimeSlice JSON.
- * Changes are local until Save writes them to the scenario store;
- * Cancel discards them. Mount with key={scenario.id} so the inputs
- * reset when another scenario is selected.
+ *
+ * Every keystroke that parses to a valid TimeSlice (or clears the field) is
+ * reported through onPreview, so the host can feed the draft straight into
+ * the Timesheet control — the calendar updates instantly while typing.
+ * While a field is invalid, the last valid value stays on screen.
+ * The scenario store is only written on Save; Cancel discards the draft.
+ * Mount with key={scenario.id} so the inputs reset when another scenario
+ * is selected.
  */
-export default function ScenarioEditor({ scenario, onSave, onCancel }) {
+export default function ScenarioEditor({ scenario, onPreview, onSave, onCancel }) {
   const [title, setTitle] = useState(scenario.title);
   const [baselineText, setBaselineText] = useState(() => sliceText(scenario, 'BASELINE'));
   const [deltaText, setDeltaText] = useState(() => sliceText(scenario, 'TEMPDELTA'));
@@ -25,6 +30,17 @@ export default function ScenarioEditor({ scenario, onSave, onCancel }) {
 
   const valid =
     (parsedBaseline.slice || !baselineText.trim()) && (parsedDelta.slice || !deltaText.trim());
+
+  const editSlice = (text, interpretation, setText, patchKey) => {
+    setText(text);
+    const { slice } = parseSliceText(text, interpretation);
+    if (slice) {
+      onPreview?.({ [patchKey]: { ...slice, interpretation } });
+    } else if (!text.trim()) {
+      onPreview?.({ [patchKey]: null });
+    }
+    // invalid JSON mid-edit: keep previewing the last valid value
+  };
 
   const save = () => {
     if (!valid) return;
@@ -48,7 +64,9 @@ export default function ScenarioEditor({ scenario, onSave, onCancel }) {
             id="baseline-json"
             spellCheck={false}
             value={baselineText}
-            onChange={(e) => setBaselineText(e.target.value)}
+            onChange={(e) =>
+              editSlice(e.target.value, 'BASELINE', setBaselineText, 'baselineSlice')
+            }
           />
           {parsedBaseline.error && <div className="editor-error">{parsedBaseline.error}</div>}
         </div>
@@ -58,7 +76,7 @@ export default function ScenarioEditor({ scenario, onSave, onCancel }) {
             id="delta-json"
             spellCheck={false}
             value={deltaText}
-            onChange={(e) => setDeltaText(e.target.value)}
+            onChange={(e) => editSlice(e.target.value, 'TEMPDELTA', setDeltaText, 'deltaSlice')}
           />
           {parsedDelta.error && <div className="editor-error">{parsedDelta.error}</div>}
         </div>
@@ -67,7 +85,9 @@ export default function ScenarioEditor({ scenario, onSave, onCancel }) {
             Save
           </button>
           <button onClick={onCancel}>Cancel</button>
-          {!valid && <span className="editor-status editor-status-dirty">invalid JSON</span>}
+          <span className={`editor-status${valid ? '' : ' editor-status-dirty'}`}>
+            {valid ? 'live preview — Save to keep, Cancel to discard' : 'invalid JSON'}
+          </span>
         </div>
       </div>
     </section>

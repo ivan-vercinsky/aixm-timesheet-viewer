@@ -1,4 +1,4 @@
-import { SOURCE, stateOf } from '../lib/schedule.js';
+import { SOURCE, stateOf } from './lib/schedule.js';
 
 export default function TimesheetPanel({ title, kind, slice }) {
   return (

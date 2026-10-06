@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { addDays, fmtDate, fmtTime } from '../lib/timesheet.js';
-import { SOURCE, SOURCE_LABELS } from '../lib/schedule.js';
+import { addDays, fmtDate, fmtTime } from './lib/timesheet.js';
+import { SOURCE, SOURCE_LABELS } from './lib/schedule.js';
 
 const HOUR_PX = 26;
 const DAY_NAMES = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];

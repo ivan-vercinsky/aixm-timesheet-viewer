@@ -135,18 +135,51 @@
   padding: var(--eds-dimension-padding-xs);
   margin-bottom: var(--eds-dimension-margin-sm);
 }
-.scenario-editor summary {
-  cursor: pointer;
-  font-size: var(--eds-font-size-sm);
-  font-weight: var(--eds-font-weight-semibold);
-  color: var(--text-secondary);
-  display: flex;
-  align-items: baseline;
-  gap: var(--eds-dimension-margin-xs);
-  flex-wrap: wrap;
+.edit-bar {
+  margin-bottom: var(--eds-dimension-margin-sm);
 }
-.scenario-editor[open] summary {
-  margin-bottom: var(--eds-dimension-margin-xs);
+.btn-primary {
+  background: var(--eds-color-primary-base);
+  color: var(--eds-white-100, #fff);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  height: var(--control-h-sm);
+  padding: 0 16px;
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--eds-font-size-sm);
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--eds-color-primary-hover, var(--eds-primary-50));
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-primary:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.editor-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: var(--eds-dimension-margin-xs);
+}
+.editor-actions button:not(.btn-primary) {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  height: var(--control-h-sm);
+  padding: 0 16px;
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--eds-font-size-sm);
+}
+.editor-actions button:not(.btn-primary):hover {
+  color: var(--eds-color-primary-hover, var(--eds-primary-50));
+  border-color: var(--eds-color-primary-border-hover);
 }
 .editor-status {
   font-weight: normal;
@@ -226,20 +259,6 @@
   line-height: var(--eds-font-line-height-sm);
   white-space: pre-wrap;
 }
-.editor-supersedes {
-  grid-column: 1 / -1;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-secondary);
-  font-size: var(--eds-font-size-sm);
-  cursor: default;
-}
-.editor-supersedes input {
-  margin: 0;
-  accent-color: var(--eds-color-primary-base);
-}
-
 /* ---------- header ---------- */
 .app-head {
   display: flex;

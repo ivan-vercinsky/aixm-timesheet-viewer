@@ -10,19 +10,12 @@ const sliceText = (scenario, interpretation) => {
 };
 
 /**
- * Per-scenario editor: title, BASELINE/TEMPDELTA TimeSlice JSON and the
- * supersedes flag. Valid edits are pushed up immediately (the parent persists
- * them to localStorage); invalid JSON shows an inline error and is not saved.
- * Mount with key={scenario.id} so the texts reset on selection change.
+ * Per-scenario editor: title and BASELINE/TEMPDELTA TimeSlice JSON.
+ * Changes are local until Save writes them to the scenario store;
+ * Cancel discards them. Mount with key={scenario.id} so the inputs
+ * reset when another scenario is selected.
  */
-export default function ScenarioEditor({
-  scenario,
-  open,
-  onOpenChange,
-  onRename,
-  onSupersedesChange,
-  onSlicesChange,
-}) {
+export default function ScenarioEditor({ scenario, onSave, onCancel }) {
   const [title, setTitle] = useState(scenario.title);
   const [baselineText, setBaselineText] = useState(() => sliceText(scenario, 'BASELINE'));
   const [deltaText, setDeltaText] = useState(() => sliceText(scenario, 'TEMPDELTA'));
@@ -30,39 +23,24 @@ export default function ScenarioEditor({
   const parsedBaseline = useMemo(() => parseSliceText(baselineText, 'BASELINE'), [baselineText]);
   const parsedDelta = useMemo(() => parseSliceText(deltaText, 'TEMPDELTA'), [deltaText]);
 
-  const pushSlices = (bText, dText) => {
-    const b = parseSliceText(bText, 'BASELINE');
-    const d = parseSliceText(dText, 'TEMPDELTA');
-    const bOk = b.slice || !bText.trim();
-    const dOk = d.slice || !dText.trim();
-    if (bOk && dOk) onSlicesChange(b.slice, d.slice);
-  };
-
-  const saved =
+  const valid =
     (parsedBaseline.slice || !baselineText.trim()) && (parsedDelta.slice || !deltaText.trim());
 
+  const save = () => {
+    if (!valid) return;
+    onSave({
+      title,
+      baselineSlice: parsedBaseline.slice,
+      deltaSlice: parsedDelta.slice,
+    });
+  };
+
   return (
-    <details
-      className="scenario-editor"
-      open={open}
-      onToggle={(e) => onOpenChange(e.target.open)}
-    >
-      <summary>
-        Edit scenario — BASELINE / TEMPDELTA TimeSlices (JSON)
-        <span className={`editor-status ${saved ? '' : 'editor-status-dirty'}`}>
-          {saved ? 'saved to this browser' : 'invalid JSON — not saved'}
-        </span>
-      </summary>
+    <section className="scenario-editor">
       <div className="editor-grid">
         <label className="editor-title">
           Title
-          <input
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              onRename(e.target.value);
-            }}
-          />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} />
         </label>
         <div className="editor-field">
           <label htmlFor="baseline-json">BASELINE TimeSlice · JSON (optional)</label>
@@ -70,10 +48,7 @@ export default function ScenarioEditor({
             id="baseline-json"
             spellCheck={false}
             value={baselineText}
-            onChange={(e) => {
-              setBaselineText(e.target.value);
-              pushSlices(e.target.value, deltaText);
-            }}
+            onChange={(e) => setBaselineText(e.target.value)}
           />
           {parsedBaseline.error && <div className="editor-error">{parsedBaseline.error}</div>}
         </div>
@@ -83,25 +58,18 @@ export default function ScenarioEditor({
             id="delta-json"
             spellCheck={false}
             value={deltaText}
-            onChange={(e) => {
-              setDeltaText(e.target.value);
-              pushSlices(baselineText, e.target.value);
-            }}
+            onChange={(e) => setDeltaText(e.target.value)}
           />
           {parsedDelta.error && <div className="editor-error">{parsedDelta.error}</div>}
         </div>
-        <label
-          className="editor-supersedes"
-          title="AIXM temporality: during its validity the TEMPDELTA replaces the whole availability property. Untick to read the TEMPDELTA as an overlay where the BASELINE survives outside the overlapped periods (for encodings without baseline copies)."
-        >
-          <input
-            type="checkbox"
-            checked={scenario.supersedesBaseline !== false}
-            onChange={(e) => onSupersedesChange(e.target.checked)}
-          />
-          TEMPDELTA supersedes BASELINE during its validity (AIXM temporality)
-        </label>
+        <div className="editor-actions">
+          <button className="btn-primary" disabled={!valid} onClick={save}>
+            Save
+          </button>
+          <button onClick={onCancel}>Cancel</button>
+          {!valid && <span className="editor-status editor-status-dirty">invalid JSON</span>}
+        </div>
       </div>
-    </details>
+    </section>
   );
 }

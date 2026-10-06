@@ -139,6 +139,33 @@ export function restoreDefaults(list) {
   return [...defaults, ...list.filter((s) => !defaultIds.has(s.id))];
 }
 
+/** Scenario → pretty JSON for a file export (the volatile id is stripped). */
+export function serializeScenario(scenario) {
+  const { id: _id, ...rest } = scenario;
+  return JSON.stringify(rest, null, 2);
+}
+
+/**
+ * Parse an exported scenario file (or a bundled-example-shaped JSON).
+ * Returns { scenario } with a fresh id, or { error }.
+ */
+export function parseImportedScenario(text, fallbackTitle) {
+  let obj;
+  try {
+    obj = JSON.parse(text);
+  } catch (err) {
+    return { error: `Invalid JSON: ${err.message}` };
+  }
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj) || !obj.feature?.timeSlices) {
+    return {
+      error: 'Not a scenario file — expected an object with { title, feature: { timeSlices: [...] } }',
+    };
+  }
+  return {
+    scenario: { ...obj, id: uuid(), title: obj.title || fallbackTitle || 'Imported scenario' },
+  };
+}
+
 /**
  * Parse one TimeSlice from user JSON. Also accepts a whole example file,
  * a feature or a timeSlices array and picks the slice by `interpretation`.

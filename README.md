@@ -69,11 +69,14 @@ The code separates the two responsibilities a future EDS component split needs:
 - **Scenario management** (`src/lib/store.js`): the bundled example scenarios
   are bootstrapped into localStorage on first load; a collapsible list on the
   left selects the scenario shown in the detail pane and supports **add**,
-  **duplicate**, **delete** and **Restore defaults**. Every scenario has a
-  collapsible editor (title, supersedes flag, and two JSON inputs that
-  overwrite its BASELINE/TEMPDELTA TimeSlices). Edits are parsed live — valid
-  JSON saves to the browser immediately, invalid JSON shows an inline error
-  and is not saved. Both input shapes are accepted (simplified
+  **duplicate**, **delete**, **export** (download one scenario as a JSON
+  file), **Import…** (add such a file back) and **Restore defaults**. An
+  **Edit** button opens the scenario editor (title and two JSON inputs that
+  overwrite its BASELINE/TEMPDELTA TimeSlices); **Save** writes the changes
+  to the browser storage, **Cancel** discards them, and invalid JSON disables
+  Save with an inline error. The per-scenario `supersedesBaseline` flag is
+  honored from the data but no longer exposed in the UI. Both input shapes
+  are accepted (simplified
   `activation`/`availability` with `timeInterval`, or AIXM-JSON
   `aixm:availability`); pasting a whole example file or feature also works —
   the matching TimeSlice is picked by its `interpretation`. The calendar snaps

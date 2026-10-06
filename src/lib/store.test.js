@@ -5,8 +5,10 @@ import {
   defaultScenarios,
   duplicateScenario,
   loadScenarios,
+  parseImportedScenario,
   removeScenario,
   restoreDefaults,
+  serializeScenario,
   updateScenario,
 } from './store.js';
 import { normalizeSlice } from './schedule.js';
@@ -73,6 +75,34 @@ describe('scenario list mutations', () => {
     const restored = restoreDefaults(list);
     expect(restored.filter((s) => s.title === 'mine')).toHaveLength(1);
     expect(restored.length).toBe(defaultScenarios().length + 1);
+  });
+});
+
+describe('export / import', () => {
+  it('round-trips a scenario through serialize + parseImported with a fresh id', () => {
+    const original = defaultScenarios()[5];
+    const text = serializeScenario(original);
+    expect(JSON.parse(text).id).toBeUndefined();
+    const { scenario, error } = parseImportedScenario(text);
+    expect(error).toBeUndefined();
+    expect(scenario.id).toBeDefined();
+    expect(scenario.id).not.toBe(original.id);
+    expect(scenario.title).toBe(original.title);
+    expect(scenario.feature).toEqual(original.feature);
+  });
+
+  it('falls back to the file name when the title is missing', () => {
+    const { scenario } = parseImportedScenario(
+      JSON.stringify({ feature: { timeSlices: [] } }),
+      'my-export'
+    );
+    expect(scenario.title).toBe('my-export');
+  });
+
+  it('rejects invalid JSON and non-scenario files', () => {
+    expect(parseImportedScenario('{oops').error).toMatch(/Invalid JSON/);
+    expect(parseImportedScenario('[1,2]').error).toMatch(/Not a scenario file/);
+    expect(parseImportedScenario('{"title":"x"}').error).toMatch(/Not a scenario file/);
   });
 });
 

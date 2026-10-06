@@ -17,9 +17,11 @@ import {
   createScenario,
   duplicateScenario,
   loadScenarios,
+  parseImportedScenario,
   persistScenarios,
   removeScenario,
   restoreDefaults,
+  serializeScenario,
   updateScenario,
 } from './lib/store.js';
 import './App.css';
@@ -96,13 +98,39 @@ export default function App() {
     if (scenario?.id === id) setSelectedId(next[0]?.id ?? null);
   };
   const restore = () => setScenarios(restoreDefaults(scenarios));
+  const exportScenario = (id) => {
+    const s = scenarios.find((x) => x.id === id);
+    if (!s) return;
+    const slug = s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'scenario';
+    const url = URL.createObjectURL(
+      new Blob([serializeScenario(s)], { type: 'application/json' })
+    );
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${slug}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  const importScenario = async (file) => {
+    const { scenario: imported, error } = parseImportedScenario(
+      await file.text(),
+      file.name.replace(/\.json$/i, '')
+    );
+    if (error) {
+      window.alert(`Import failed: ${error}`);
+      return;
+    }
+    setScenarios([...scenarios, imported]);
+    setSelectedId(imported.id);
+  };
   const updateSelected = (patch) => setScenarios(updateScenario(scenarios, scenario.id, patch));
-  const onSlicesChange = (baselineSlice, deltaSlice) => {
+  const saveEdits = ({ title, baselineSlice, deltaSlice }) => {
     const timeSlices = [
       baselineSlice && { ...baselineSlice, interpretation: 'BASELINE' },
       deltaSlice && { ...deltaSlice, interpretation: 'TEMPDELTA' },
     ].filter(Boolean);
-    updateSelected({ feature: { ...scenario.feature, timeSlices } });
+    updateSelected({ title, feature: { ...scenario.feature, timeSlices } });
+    setEditorOpen(false);
   };
 
   const weekEnd = addDays(weekStart, 7);
@@ -172,6 +200,8 @@ export default function App() {
         onAdd={addScenario}
         onDuplicate={duplicate}
         onDelete={remove}
+        onExport={exportScenario}
+        onImport={importScenario}
         onRestoreDefaults={restore}
       />
 
@@ -215,15 +245,20 @@ export default function App() {
               </div>
             </header>
 
-            <ScenarioEditor
-              key={scenario.id}
-              scenario={scenario}
-              open={editorOpen}
-              onOpenChange={setEditorOpen}
-              onRename={(title) => updateSelected({ title })}
-              onSupersedesChange={(v) => updateSelected({ supersedesBaseline: v })}
-              onSlicesChange={onSlicesChange}
-            />
+            {editorOpen ? (
+              <ScenarioEditor
+                key={scenario.id}
+                scenario={scenario}
+                onSave={saveEdits}
+                onCancel={() => setEditorOpen(false)}
+              />
+            ) : (
+              <div className="edit-bar">
+                <button className="btn-primary" onClick={() => setEditorOpen(true)}>
+                  Edit
+                </button>
+              </div>
+            )}
 
             <div className="toolbar">
               <div className="weeknav">

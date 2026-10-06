@@ -56,6 +56,13 @@ The code separates the two responsibilities a future EDS component split needs:
     the left edge shows provenance (blue = from BASELINE/copy, tomato = Event
     change). Explicit **INACTIVE/CLOSED** periods render as red hatched blocks
     and carve the active periods — a state change, not missing data.
+- A **Custom scenario** (last entry in the dropdown) with two JSON editors for
+  your own BASELINE and TEMPDELTA TimeSlices, parsed live with inline errors.
+  Both input shapes are accepted (simplified `activation`/`availability` with
+  `timeInterval`, or AIXM-JSON `aixm:availability`); pasting a whole example
+  file or feature also works — the matching TimeSlice is picked by its
+  `interpretation`. The calendar snaps to the pasted TEMPDELTA validity, and a
+  checkbox switches between AIXM-temporality (supersedes) and overlay reading.
 - A **"split overlapping groups"** toggle shows the alternative
   non-overlapping AIXM encoding: overlapping availability groups are cut into
   fragments, the later (exception) group prevailing — e.g. NORMAL 00:00–04:00

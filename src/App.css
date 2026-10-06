@@ -37,6 +37,63 @@
   box-shadow: var(--focus-ring);
 }
 
+/* ---------- custom scenario editor ---------- */
+.editor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: var(--eds-dimension-margin);
+  margin-bottom: var(--eds-dimension-margin);
+}
+.editor-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.editor-field label {
+  color: var(--text-muted);
+  font-size: var(--eds-font-size-sm);
+  line-height: var(--eds-font-line-height-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.editor-field textarea {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--eds-dimension-padding-xs);
+  font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.45;
+  min-height: 320px;
+  resize: vertical;
+  tab-size: 2;
+}
+.editor-field textarea:focus-visible {
+  outline: none;
+  border-color: var(--eds-color-primary-base);
+  box-shadow: var(--focus-ring);
+}
+.editor-error {
+  color: var(--inactive);
+  font-size: var(--eds-font-size-sm);
+  line-height: var(--eds-font-line-height-sm);
+  white-space: pre-wrap;
+}
+.editor-supersedes {
+  grid-column: 1 / -1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  font-size: var(--eds-font-size-sm);
+  cursor: default;
+}
+.editor-supersedes input {
+  margin: 0;
+  accent-color: var(--eds-color-primary-base);
+}
+
 /* ---------- header ---------- */
 .app-head {
   display: flex;

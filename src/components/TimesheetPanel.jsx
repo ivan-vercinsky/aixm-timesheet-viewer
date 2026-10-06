@@ -6,10 +6,12 @@ export default function TimesheetPanel({ title, kind, slice }) {
       <header className="panel-head">
         <span className={`dot dot-${kind}`} />
         <h2>{title}</h2>
-        <span className="panel-meta">
-          SEQ {slice.sequenceNumber}
-          {slice.correctionNumber != null && ` / COR ${slice.correctionNumber}`}
-        </span>
+        {slice.sequenceNumber != null && (
+          <span className="panel-meta">
+            SEQ {slice.sequenceNumber}
+            {slice.correctionNumber != null && ` / COR ${slice.correctionNumber}`}
+          </span>
+        )}
       </header>
       {slice.groups.map((g, gi) => (
         <div key={gi} className="ts-group">

@@ -16,10 +16,4 @@ export const examples = [
   adAhpHospital,
   saaActCopyOnly,
   svcHrsIntermittent,
-  {
-    id: 'custom',
-    custom: true,
-    title: 'Custom — paste your own BASELINE / TEMPDELTA TimeSlices (JSON)',
-    note: 'Paste one TimeSlice per input, either in the simplified example shape ("activation"/"availability" with "timeInterval" — a single group or an array of groups) or in the AIXM 5.1.1 JSON shape ("aixm:availability"). A whole example file or feature can also be pasted — the matching TimeSlice is picked by its "interpretation". The inputs are pre-filled with the hospital heliport example; provenance of TEMPDELTA content is derived by structural matching unless timesheets carry explicit "source" tags.',
-  },
 ];

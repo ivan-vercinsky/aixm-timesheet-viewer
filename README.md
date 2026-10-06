@@ -13,7 +13,17 @@ BASELINE timesheets that remain applicable, copied from Baseline).
 npm install
 npm run dev
 npm test      # vitest suite for the resolution layer (the 14 schedule cases)
+npm run push  # bump the patch version (package.json + git tag), then push
 ```
+
+## Versioning
+
+The app version (shown in the detail header) comes from `package.json` via a
+Vite `__APP_VERSION__` define, starting at 0.0.1. Every push must go through
+`npm run push`, which runs `npm version patch` (bumps the last number, commits
+`v0.0.X` and tags it) before `git push --follow-tags` — so each push increases
+the patch version. It requires a clean working tree: commit your changes
+first, then `npm run push`.
 
 ## Architecture: resolution layer vs. calendar component
 
@@ -56,13 +66,18 @@ The code separates the two responsibilities a future EDS component split needs:
     the left edge shows provenance (blue = from BASELINE/copy, tomato = Event
     change). Explicit **INACTIVE/CLOSED** periods render as red hatched blocks
     and carve the active periods — a state change, not missing data.
-- A **Custom scenario** (last entry in the dropdown) with two JSON editors for
-  your own BASELINE and TEMPDELTA TimeSlices, parsed live with inline errors.
-  Both input shapes are accepted (simplified `activation`/`availability` with
-  `timeInterval`, or AIXM-JSON `aixm:availability`); pasting a whole example
-  file or feature also works — the matching TimeSlice is picked by its
-  `interpretation`. The calendar snaps to the pasted TEMPDELTA validity, and a
-  checkbox switches between AIXM-temporality (supersedes) and overlay reading.
+- **Scenario management** (`src/lib/store.js`): the bundled example scenarios
+  are bootstrapped into localStorage on first load; a collapsible list on the
+  left selects the scenario shown in the detail pane and supports **add**,
+  **duplicate**, **delete** and **Restore defaults**. Every scenario has a
+  collapsible editor (title, supersedes flag, and two JSON inputs that
+  overwrite its BASELINE/TEMPDELTA TimeSlices). Edits are parsed live — valid
+  JSON saves to the browser immediately, invalid JSON shows an inline error
+  and is not saved. Both input shapes are accepted (simplified
+  `activation`/`availability` with `timeInterval`, or AIXM-JSON
+  `aixm:availability`); pasting a whole example file or feature also works —
+  the matching TimeSlice is picked by its `interpretation`. The calendar snaps
+  to the TEMPDELTA validity.
 - A **"split overlapping groups"** toggle shows the alternative
   non-overlapping AIXM encoding: overlapping availability groups are cut into
   fragments, the later (exception) group prevailing — e.g. NORMAL 00:00–04:00

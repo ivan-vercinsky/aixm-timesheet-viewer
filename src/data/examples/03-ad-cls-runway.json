@@ -1,0 +1,88 @@
+{
+  "id": "ad-cls-runway",
+  "title": "AD.CLS — Runway closed for maintenance (CLOSED + baseline copy)",
+  "note": "Per AIXM temporality the TEMPDELTA replaces the whole availability property during the NOTAM validity, so it must carry the complete picture: the remaining OPERATIONAL hours copied from BASELINE plus the CLOSED windows layered on top. Neither group carries hand-authored source tags — the copy is derived by structural matching (the 19-10…21-10 window is a date-narrowed copy of the year-round baseline sheet). The two groups overlap 08:00–12:00; enable \"split overlapping groups\" to see the equivalent non-overlapping encoding (OPERATIONAL 05:00–08:00 / CLOSED 08:00–12:00 / OPERATIONAL 12:00–22:00).",
+  "event": {
+    "scenario": "AD.CLS",
+    "notam": {
+      "series": "A",
+      "number": "0892",
+      "year": "2026",
+      "type": "N",
+      "text": "EBDM RWY 07/25 CLSD DUE TO MAINT MON-WED 0800-1200."
+    },
+    "validTime": {
+      "begin": "2026-10-19T08:00:00Z",
+      "end": "2026-10-21T12:00:00Z"
+    }
+  },
+  "feature": {
+    "featureType": "Runway",
+    "gmlId": "uuid.5b20d7aa-91c3-47e8-9f06-c2d13e55ab04",
+    "designator": "RWY 07/25",
+    "name": "DEMO AERODROME (EBDM) RWY 07/25",
+    "type": "RWY",
+    "upperLimit": "—",
+    "lowerLimit": "—",
+    "timeSlices": [
+      {
+        "interpretation": "BASELINE",
+        "sequenceNumber": 12,
+        "correctionNumber": 0,
+        "validTime": { "begin": "2026-01-01T00:00:00Z", "end": null },
+        "availability": {
+          "status": "OPERATIONAL",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "ANY",
+              "startTime": "05:00",
+              "endTime": "22:00"
+            }
+          ]
+        }
+      },
+      {
+        "interpretation": "TEMPDELTA",
+        "sequenceNumber": 12,
+        "correctionNumber": 1,
+        "validTime": {
+          "begin": "2026-10-19T08:00:00Z",
+          "end": "2026-10-21T12:00:00Z"
+        },
+        "availability": [
+          {
+            "status": "OPERATIONAL",
+            "note": "Remaining operational hours copied from BASELINE (AIXM temporality)",
+            "timeInterval": [
+              {
+                "timeReference": "UTC",
+                "startDate": "19-10",
+                "endDate": "21-10",
+                "day": "ANY",
+                "startTime": "05:00",
+                "endTime": "22:00"
+              }
+            ]
+          },
+          {
+            "status": "CLOSED",
+            "timeInterval": [
+              {
+                "timeReference": "UTC",
+                "startDate": "19-10",
+                "endDate": "21-10",
+                "day": "ANY",
+                "startTime": "08:00",
+                "endTime": "12:00",
+                "annotation": "Closed for maintenance (NOTAM)"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

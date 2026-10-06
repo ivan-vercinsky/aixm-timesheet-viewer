@@ -1,0 +1,65 @@
+{
+  "id": "saa-new-tda",
+  "title": "SAA.NEW — Temporary danger area (no baseline)",
+  "note": "A newly established temporary area has no BASELINE schedule at all — the feature exists only through the Event, so the calendar shows the TEMPDELTA activation alone. The two timesheets use day ANY with DD-MM date windows (02-11…04-11 and 05-11…06-11) instead of weekday codes.",
+  "event": {
+    "scenario": "SAA.NEW",
+    "notam": {
+      "series": "B",
+      "number": "0203",
+      "year": "2026",
+      "type": "N",
+      "text": "TEMPO DANGER AREA EBD51 ESTABLISHED. UAS FLIGHT TESTS. ACT MON-WED 0700-1600, THU-FRI 0700-1200."
+    },
+    "validTime": {
+      "begin": "2026-11-02T07:00:00Z",
+      "end": "2026-11-06T12:00:00Z"
+    }
+  },
+  "feature": {
+    "featureType": "Airspace",
+    "gmlId": "uuid.c91a2d64-0b7f-4e52-a3d8-1f6604be9c55",
+    "designator": "EBD51",
+    "name": "TEMPO DANGER AREA (UAS TESTS)",
+    "type": "D",
+    "upperLimit": "2500FT AMSL",
+    "lowerLimit": "GND",
+    "timeSlices": [
+      {
+        "interpretation": "TEMPDELTA",
+        "sequenceNumber": 1,
+        "correctionNumber": 0,
+        "validTime": {
+          "begin": "2026-11-02T07:00:00Z",
+          "end": "2026-11-06T12:00:00Z"
+        },
+        "activation": {
+          "status": "ACTIVE",
+          "activityType": "UAV",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "02-11",
+              "endDate": "04-11",
+              "day": "ANY",
+              "startTime": "07:00",
+              "endTime": "16:00",
+              "source": "NEW",
+              "annotation": "UAS flight tests (NOTAM)"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "05-11",
+              "endDate": "06-11",
+              "day": "ANY",
+              "startTime": "07:00",
+              "endTime": "12:00",
+              "source": "NEW",
+              "annotation": "UAS flight tests (NOTAM)"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

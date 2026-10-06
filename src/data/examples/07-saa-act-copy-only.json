@@ -1,0 +1,74 @@
+{
+  "id": "saa-act-copy-only",
+  "title": "SAA.ACT — Schedule unchanged, pure BASELINE copy (derived provenance)",
+  "note": "The Event changes no schedule at all (the NOTAM concerns the nature of the activity): the TEMPDELTA timesheet is an exact copy of the BASELINE, present only for AIXM temporality compliance. The timesheets carry no hand-authored source tags — provenance is derived by structural matching, so the whole TEMPDELTA lane renders hatched (copy) and the RESULT shows no operational change.",
+  "event": {
+    "scenario": "SAA.ACT",
+    "notam": {
+      "series": "B",
+      "number": "0188",
+      "year": "2026",
+      "type": "N",
+      "text": "EBR25A ACTIVE. INTENSIFIED GLIDER TOWING ACTIVITY WITHIN AREA. SKED UNCHANGED."
+    },
+    "validTime": {
+      "begin": "2026-10-26T08:00:00Z",
+      "end": "2026-10-30T16:00:00Z"
+    }
+  },
+  "feature": {
+    "featureType": "Airspace",
+    "gmlId": "uuid.2d8c4f71-9b0e-4a36-8c52-7e1fd30ab964",
+    "designator": "EBR25A",
+    "name": "DEMO RESTRICTED AREA R25A",
+    "type": "R",
+    "upperLimit": "4500FT AMSL",
+    "lowerLimit": "GND",
+    "timeSlices": [
+      {
+        "interpretation": "BASELINE",
+        "sequenceNumber": 9,
+        "correctionNumber": 0,
+        "validTime": { "begin": "2026-01-01T00:00:00Z", "end": null },
+        "activation": {
+          "status": "ACTIVE",
+          "activityType": "GLIDING",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "WORK_DAY",
+              "startTime": "08:00",
+              "endTime": "16:00"
+            }
+          ]
+        }
+      },
+      {
+        "interpretation": "TEMPDELTA",
+        "sequenceNumber": 9,
+        "correctionNumber": 1,
+        "validTime": {
+          "begin": "2026-10-26T08:00:00Z",
+          "end": "2026-10-30T16:00:00Z"
+        },
+        "activation": {
+          "status": "ACTIVE",
+          "activityType": "GLIDING",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "WORK_DAY",
+              "startTime": "08:00",
+              "endTime": "16:00",
+              "annotation": "Schedule unchanged — copied from Baseline for AIXM temporality"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

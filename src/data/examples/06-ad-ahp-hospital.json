@@ -1,0 +1,201 @@
+{
+  "id": "ad-ahp-hospital",
+  "title": "AD.CLS — Hospital heliport, daily closure (real AIXM-JSON availability)",
+  "note": "This example feeds the viewer with the real AIXM 5.1.1 JSON shape (aixm:availability / aixm:AirportHeliportAvailability / aixm:Timesheet). The TEMPDELTA contains two availability groups: a copy of the BASELINE availability (NORMAL H24, required by AIXM temporality — provenance derived by structural matching, no hand-authored tags) and the new CLOSED availability 04:00–07:00 daily, with an excluded Timesheet lifting the closure on 08 OCT. The RESULT lane shows the effective schedule: NORMAL except the explicit CLOSED windows.",
+  "supersedesBaseline": true,
+  "event": {
+    "scenario": "AD.CLS",
+    "notam": {
+      "series": "A",
+      "number": "1044",
+      "year": "2026",
+      "type": "N",
+      "text": "EBHO HOSPITAL HELIPORT CLSD DAILY 0400-0700 DUE TO NOISE ABATEMENT TRIAL. NOT APPLICABLE ON 08 OCT."
+    },
+    "validTime": {
+      "begin": "2026-10-05T04:00:00Z",
+      "end": "2026-10-12T07:00:00Z"
+    }
+  },
+  "feature": {
+    "featureType": "AirportHeliport",
+    "gmlId": "uuid.6fe877b3-606b-4790-b3c0-9c3f20619b17",
+    "designator": "EBHO",
+    "name": "DEMO HOSPITAL HELIPORT",
+    "type": "HP",
+    "upperLimit": "—",
+    "lowerLimit": "—",
+    "timeSlices": [
+      {
+        "interpretation": "BASELINE",
+        "sequenceNumber": 6,
+        "correctionNumber": 0,
+        "validTime": { "begin": "2026-01-01T00:00:00Z", "end": null },
+        "aixm:availability": [
+          {
+            "aixm:AirportHeliportAvailability": {
+              "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_13",
+              "aixm:timeInterval": {
+                "aixm:Timesheet": {
+                  "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_14",
+                  "aixm:timeReference": "UTC",
+                  "aixm:day": "ANY",
+                  "aixm:startTime": "00:00",
+                  "aixm:endTime": "24:00",
+                  "aixm:daylightSavingAdjust": "NO",
+                  "aixm:excluded": "NO"
+                }
+              },
+              "aixm:operationalStatus": "NORMAL",
+              "aixm:usage": {
+                "aixm:AirportHeliportUsage": {
+                  "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_15",
+                  "aixm:type": "RESERV",
+                  "aixm:selection": {
+                    "aixm:ConditionCombination": {
+                      "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_16",
+                      "aixm:timeInterval": {
+                        "aixm:Timesheet": {
+                          "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_17",
+                          "aixm:timeReference": "UTC",
+                          "aixm:day": "ANY",
+                          "aixm:startTime": "00:00",
+                          "aixm:endTime": "24:00",
+                          "aixm:daylightSavingAdjust": "NO",
+                          "aixm:excluded": "NO"
+                        }
+                      },
+                      "aixm:logicalOperator": "NONE",
+                      "aixm:flight": {
+                        "aixm:FlightCharacteristic": {
+                          "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_18",
+                          "aixm:status": "HOSP",
+                          "aixm:military": "CIVIL"
+                        }
+                      }
+                    }
+                  },
+                  "aixm:annotation": {
+                    "aixm:Note": {
+                      "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_19",
+                      "aixm:purpose": "REMARK",
+                      "aixm:translatedNote": {
+                        "aixm:LinguisticNote": {
+                          "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_20",
+                          "aixm:note": "txtRmk:PPR. \nOnly HEL operating in performance class I performing HEMS and\nAIR AMBULANCE flights."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "interpretation": "TEMPDELTA",
+        "sequenceNumber": 6,
+        "correctionNumber": 1,
+        "validTime": {
+          "begin": "2026-10-05T04:00:00Z",
+          "end": "2026-10-12T07:00:00Z"
+        },
+        "aixm:availability": [
+          {
+            "aixm:AirportHeliportAvailability": {
+              "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_13",
+              "aixm:timeInterval": {
+                "aixm:Timesheet": {
+                  "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_14",
+                  "aixm:timeReference": "UTC",
+                  "aixm:day": "ANY",
+                  "aixm:startTime": "00:00",
+                  "aixm:endTime": "24:00",
+                  "aixm:daylightSavingAdjust": "NO",
+                  "aixm:excluded": "NO"
+                }
+              },
+              "aixm:operationalStatus": "NORMAL",
+              "aixm:usage": {
+                "aixm:AirportHeliportUsage": {
+                  "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_15",
+                  "aixm:type": "RESERV",
+                  "aixm:selection": {
+                    "aixm:ConditionCombination": {
+                      "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_16",
+                      "aixm:timeInterval": {
+                        "aixm:Timesheet": {
+                          "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_17",
+                          "aixm:timeReference": "UTC",
+                          "aixm:day": "ANY",
+                          "aixm:startTime": "00:00",
+                          "aixm:endTime": "24:00",
+                          "aixm:daylightSavingAdjust": "NO",
+                          "aixm:excluded": "NO"
+                        }
+                      },
+                      "aixm:logicalOperator": "NONE",
+                      "aixm:flight": {
+                        "aixm:FlightCharacteristic": {
+                          "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_18",
+                          "aixm:status": "HOSP",
+                          "aixm:military": "CIVIL"
+                        }
+                      }
+                    }
+                  },
+                  "aixm:annotation": {
+                    "aixm:Note": {
+                      "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_19",
+                      "aixm:purpose": "REMARK",
+                      "aixm:translatedNote": {
+                        "aixm:LinguisticNote": {
+                          "-gml:id": "id_6fe877b3-606b-4790-b3c0-9c3f20619b17_6_0_B_20",
+                          "aixm:note": "txtRmk:PPR. \nOnly HEL operating in performance class I performing HEMS and\nAIR AMBULANCE flights."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "aixm:AirportHeliportAvailability": {
+              "-gml:id": "ID",
+              "aixm:timeInterval": [
+                {
+                  "aixm:Timesheet": {
+                    "-gml:id": "id",
+                    "aixm:timeReference": "UTC",
+                    "aixm:day": "ANY",
+                    "aixm:dayTil": null,
+                    "aixm:startTime": "04:00",
+                    "aixm:endTime": "07:00",
+                    "aixm:daylightSavingAdjust": "NO",
+                    "aixm:excluded": "NO"
+                  }
+                },
+                {
+                  "aixm:Timesheet": {
+                    "-gml:id": "id",
+                    "aixm:timeReference": "UTC",
+                    "aixm:startDate": "08-10",
+                    "aixm:endDate": "08-10",
+                    "aixm:day": "ANY",
+                    "aixm:startTime": "00:00",
+                    "aixm:endTime": "00:00",
+                    "aixm:daylightSavingAdjust": "NO",
+                    "aixm:excluded": "YES"
+                  }
+                }
+              ],
+              "aixm:operationalStatus": "CLOSED"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

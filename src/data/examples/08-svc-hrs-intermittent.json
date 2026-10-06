@@ -1,0 +1,91 @@
+{
+  "id": "svc-hrs-intermittent",
+  "title": "SVC.HRS — Intermittent extension, overlapping baseline (overlap precedence)",
+  "supersedesBaseline": false,
+  "note": "The Event applies only on MON, WED and FRI of its validity (intermittent): TUE and THU keep the untouched BASELINE hours. The extension 12:00–20:00 overlaps the published 06:00–14:00 by two hours — in the RESULT the TEMPDELTA takes precedence over the overlapped portion, so the effective hours are 06:00–20:00 without double-counting. The TEMPDELTA timesheets carry no source tags; derivation classifies them as Event changes (times differ from Baseline).",
+  "event": {
+    "scenario": "SVC.HRS",
+    "notam": {
+      "series": "A",
+      "number": "0931",
+      "year": "2026",
+      "type": "N",
+      "text": "EBDM AFIS HOURS OF SERVICE EXTENDED TO 2000 ON MON WED FRI."
+    },
+    "validTime": {
+      "begin": "2026-11-09T12:00:00Z",
+      "end": "2026-11-13T20:00:00Z"
+    }
+  },
+  "feature": {
+    "featureType": "InformationService",
+    "gmlId": "uuid.a3b91c57-44e0-4f8a-9d26-0c7e5bb12f84",
+    "designator": "EBDM AFIS",
+    "name": "DEMO INFO (AFIS)",
+    "type": "FIS",
+    "upperLimit": "—",
+    "lowerLimit": "—",
+    "timeSlices": [
+      {
+        "interpretation": "BASELINE",
+        "sequenceNumber": 3,
+        "correctionNumber": 0,
+        "validTime": { "begin": "2026-01-01T00:00:00Z", "end": null },
+        "availability": {
+          "status": "NORMAL",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "ANY",
+              "startTime": "06:00",
+              "endTime": "14:00"
+            }
+          ]
+        }
+      },
+      {
+        "interpretation": "TEMPDELTA",
+        "sequenceNumber": 3,
+        "correctionNumber": 1,
+        "validTime": {
+          "begin": "2026-11-09T12:00:00Z",
+          "end": "2026-11-13T20:00:00Z"
+        },
+        "availability": {
+          "status": "NORMAL",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "09-11",
+              "endDate": "09-11",
+              "day": "MON",
+              "startTime": "12:00",
+              "endTime": "20:00",
+              "annotation": "Extended hours of service (NOTAM)"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "11-11",
+              "endDate": "11-11",
+              "day": "WED",
+              "startTime": "12:00",
+              "endTime": "20:00",
+              "annotation": "Extended hours of service (NOTAM)"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "13-11",
+              "endDate": "13-11",
+              "day": "FRI",
+              "startTime": "12:00",
+              "endTime": "20:00",
+              "annotation": "Extended hours of service (NOTAM)"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+/*
+ * App-level semantic variables, mapped onto EDS design tokens
+ * (see styles/eds-tokens.css). The .eds-dark class on <html> switches
+ * the whole token set; main.jsx keeps it in sync with the OS preference.
+ */
+:root,
+.eds-light {
+  color-scheme: light;
+}
+.eds-dark {
+  color-scheme: dark;
+}
+
+:root {
+  --page: var(--eds-color-bg-layout);
+  --surface: var(--eds-color-bg-container);
+  --text-primary: var(--eds-black-88-text);
+  --text-secondary: var(--eds-black-65-secondary-text);
+  --text-muted: var(--eds-black-45-tertiary-text);
+  --gridline: var(--eds-color-border-split);
+  --axis: var(--eds-color-border-default);
+  --border: var(--eds-color-border-default);
+
+  /* timeline lanes: EDS primary for BASELINE, NM flow tomato for TEMPDELTA */
+  --baseline: var(--eds-color-primary-base);
+  --delta: var(--eds-flow-nmui-flow-tomato-darkest);
+  --baseline-soft: color-mix(in srgb, var(--baseline) 18%, transparent);
+  --delta-soft: color-mix(in srgb, var(--delta) 12%, transparent);
+
+  /* RESULT lane (effective schedule) and explicit INACTIVE/CLOSED state */
+  --result: var(--eds-color-success-base);
+  --inactive: var(--eds-color-error-base);
+  --inactive-bg: var(--eds-color-error-bg);
+
+  /* EDS control shorthands used across the app */
+  --radius: var(--eds-dimension-border-radius);
+  --control-h: var(--eds-dimension-control-height);
+  --control-h-sm: var(--eds-dimension-control-height-sm);
+  --focus-ring: 0 0 0 2px var(--eds-color-control-outline);
+}
+
+.eds-dark {
+  /* slightly brighter lanes for contrast on dark layout backgrounds */
+  --baseline: var(--eds-primary-70);
+  --delta: var(--eds-flow-nmui-flow-tomato-darker);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--text-primary);
+  font-family: var(--eds-font-family);
+  font-size: var(--eds-font-size-base);
+  line-height: var(--eds-font-line-height-base);
+}

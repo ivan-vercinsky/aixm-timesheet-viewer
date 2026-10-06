@@ -1,0 +1,113 @@
+{
+  "id": "saa-act-night",
+  "title": "SAA.ACT — TSA night ops, extra nights (midnight-crossing)",
+  "note": "The baseline timesheets cross midnight (20:00–02:00): endTime earlier than startTime means the interval continues into the next day, so each activation is split across two calendar columns. The TEMPDELTA copies the applicable baseline nights (ER-06, hatched) and adds two new FRI/SAT nights.",
+  "event": {
+    "scenario": "SAA.ACT",
+    "notam": {
+      "series": "B",
+      "number": "0171",
+      "year": "2026",
+      "type": "N",
+      "text": "EB TSA29 ACTIVE. ADDITIONAL NIGHT OPS FRI AND SAT 2100-0300."
+    },
+    "validTime": {
+      "begin": "2026-10-12T18:00:00Z",
+      "end": "2026-10-18T04:00:00Z"
+    }
+  },
+  "feature": {
+    "featureType": "Airspace",
+    "gmlId": "uuid.3f7c9e10-22ab-4d5f-b1c4-8e90aa64d721",
+    "designator": "EBTSA29",
+    "name": "NIGHT OWL TSA",
+    "type": "TSA",
+    "upperLimit": "FL245",
+    "lowerLimit": "1500FT AMSL",
+    "timeSlices": [
+      {
+        "interpretation": "BASELINE",
+        "sequenceNumber": 7,
+        "correctionNumber": 0,
+        "validTime": { "begin": "2026-01-01T00:00:00Z", "end": null },
+        "activation": {
+          "status": "ACTIVE",
+          "activityType": "MILOPS",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "TUE",
+              "startTime": "20:00",
+              "endTime": "02:00"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "THU",
+              "startTime": "20:00",
+              "endTime": "02:00"
+            }
+          ]
+        }
+      },
+      {
+        "interpretation": "TEMPDELTA",
+        "sequenceNumber": 7,
+        "correctionNumber": 1,
+        "validTime": {
+          "begin": "2026-10-12T18:00:00Z",
+          "end": "2026-10-18T04:00:00Z"
+        },
+        "activation": {
+          "status": "ACTIVE",
+          "activityType": "MILOPS",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "13-10",
+              "endDate": "13-10",
+              "day": "TUE",
+              "startTime": "20:00",
+              "endTime": "02:00",
+              "source": "BASELINE_COPY",
+              "annotation": "Copied from BASELINE (rule ER-06)"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "15-10",
+              "endDate": "15-10",
+              "day": "THU",
+              "startTime": "20:00",
+              "endTime": "02:00",
+              "source": "BASELINE_COPY",
+              "annotation": "Copied from BASELINE (rule ER-06)"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "16-10",
+              "endDate": "16-10",
+              "day": "FRI",
+              "startTime": "21:00",
+              "endTime": "03:00",
+              "source": "NEW",
+              "annotation": "Additional night ops (NOTAM)"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "17-10",
+              "endDate": "17-10",
+              "day": "SAT",
+              "startTime": "21:00",
+              "endTime": "03:00",
+              "source": "NEW",
+              "annotation": "Additional night ops (NOTAM)"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

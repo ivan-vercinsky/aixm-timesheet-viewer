@@ -1,0 +1,124 @@
+{
+  "id": "saa-act-extension",
+  "title": "SAA.ACT — Restricted area, activity extended (ER-06 copies)",
+  "note": "During the NOTAM validity period the TEMPDELTA TimeSlice replaces the BASELINE activation entirely — baseline blocks inside the validity window are shown dimmed. Rule ER-06 requires the TEMPDELTA to also carry the baseline timesheets that remain applicable (hatched orange), not only the new activations.",
+  "description": "Simplified AIXM 5.1.1 / Digital NOTAM sample: SAA.ACT scenario. One Airspace feature with a BASELINE TimeSlice (published activity schedule) and a TEMPDELTA TimeSlice (NOTAM activation). Per coding rule ER-06, the TEMPDELTA must contain the full resulting schedule for the NOTAM validity period, i.e. the new activations PLUS the baseline timesheets that remain applicable (copied from BASELINE).",
+  "event": {
+    "scenario": "SAA.ACT",
+    "notam": {
+      "series": "B",
+      "number": "0157",
+      "year": "2026",
+      "type": "N",
+      "text": "EBR25 DEMO RESTRICTED AREA ACTIVE. ACTIVITY EXTENDED MON AND WED UNTIL 2200."
+    },
+    "validTime": {
+      "begin": "2026-10-05T06:00:00Z",
+      "end": "2026-10-09T20:00:00Z"
+    }
+  },
+  "feature": {
+    "featureType": "Airspace",
+    "gmlId": "uuid.9a1b6c2e-0f3d-4c21-a8e7-5d44f1c0de90",
+    "designator": "EBR25",
+    "name": "DEMO RESTRICTED AREA R25",
+    "type": "R",
+    "upperLimit": "FL195",
+    "lowerLimit": "GND",
+    "timeSlices": [
+      {
+        "interpretation": "BASELINE",
+        "sequenceNumber": 4,
+        "correctionNumber": 0,
+        "validTime": { "begin": "2026-01-01T00:00:00Z", "end": null },
+        "activation": {
+          "status": "ACTIVE",
+          "activityType": "MILOPS",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "WORK_DAY",
+              "startTime": "07:00",
+              "endTime": "15:00"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "SAT",
+              "startTime": "08:00",
+              "endTime": "12:00"
+            }
+          ]
+        }
+      },
+      {
+        "interpretation": "TEMPDELTA",
+        "sequenceNumber": 4,
+        "correctionNumber": 1,
+        "validTime": {
+          "begin": "2026-10-05T06:00:00Z",
+          "end": "2026-10-09T20:00:00Z"
+        },
+        "activation": {
+          "status": "ACTIVE",
+          "activityType": "MILOPS",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "05-10",
+              "endDate": "05-10",
+              "day": "MON",
+              "startTime": "07:00",
+              "endTime": "22:00",
+              "source": "NEW",
+              "annotation": "Extended activity (NOTAM)"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "06-10",
+              "endDate": "06-10",
+              "day": "TUE",
+              "startTime": "07:00",
+              "endTime": "15:00",
+              "source": "BASELINE_COPY",
+              "annotation": "Copied from BASELINE (rule ER-06)"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "07-10",
+              "endDate": "07-10",
+              "day": "WED",
+              "startTime": "07:00",
+              "endTime": "22:00",
+              "source": "NEW",
+              "annotation": "Extended activity (NOTAM)"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "08-10",
+              "endDate": "08-10",
+              "day": "THU",
+              "startTime": "07:00",
+              "endTime": "15:00",
+              "source": "BASELINE_COPY",
+              "annotation": "Copied from BASELINE (rule ER-06)"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "09-10",
+              "endDate": "09-10",
+              "day": "FRI",
+              "startTime": "07:00",
+              "endTime": "15:00",
+              "source": "BASELINE_COPY",
+              "annotation": "Copied from BASELINE (rule ER-06)"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

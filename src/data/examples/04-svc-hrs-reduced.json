@@ -1,0 +1,89 @@
+{
+  "id": "svc-hrs-reduced",
+  "title": "SVC.HRS — AFIS hours reduced (date-range timesheet)",
+  "note": "The TEMPDELTA uses a single timesheet with a date range (26-10 … 30-10, day WORK_DAY) instead of one timesheet per day — the expansion produces one block per matching day. During the NOTAM validity the reduced 08:00–14:00 hours replace the published 06:00–18:00 baseline; the weekend baseline is outside the validity and untouched.",
+  "event": {
+    "scenario": "SVC.HRS",
+    "notam": {
+      "series": "A",
+      "number": "0910",
+      "year": "2026",
+      "type": "N",
+      "text": "EBDM AFIS HOURS OF SERVICE CHANGED TO MON-FRI 0800-1400 DUE TO STAFF SHORTAGE."
+    },
+    "validTime": {
+      "begin": "2026-10-26T06:00:00Z",
+      "end": "2026-10-30T18:00:00Z"
+    }
+  },
+  "feature": {
+    "featureType": "InformationService",
+    "gmlId": "uuid.7e44f0b2-6a8d-4c3e-8b17-f05621c9ad38",
+    "designator": "EBDM AFIS",
+    "name": "DEMO INFO (AFIS)",
+    "type": "FIS",
+    "upperLimit": "—",
+    "lowerLimit": "—",
+    "timeSlices": [
+      {
+        "interpretation": "BASELINE",
+        "sequenceNumber": 3,
+        "correctionNumber": 0,
+        "validTime": { "begin": "2026-01-01T00:00:00Z", "end": null },
+        "availability": {
+          "status": "NORMAL",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "WORK_DAY",
+              "startTime": "06:00",
+              "endTime": "18:00"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "SAT",
+              "startTime": "08:00",
+              "endTime": "16:00"
+            },
+            {
+              "timeReference": "UTC",
+              "startDate": "01-01",
+              "endDate": "31-12",
+              "day": "SUN",
+              "startTime": "08:00",
+              "endTime": "16:00"
+            }
+          ]
+        }
+      },
+      {
+        "interpretation": "TEMPDELTA",
+        "sequenceNumber": 3,
+        "correctionNumber": 1,
+        "validTime": {
+          "begin": "2026-10-26T06:00:00Z",
+          "end": "2026-10-30T18:00:00Z"
+        },
+        "availability": {
+          "status": "NORMAL",
+          "timeInterval": [
+            {
+              "timeReference": "UTC",
+              "startDate": "26-10",
+              "endDate": "30-10",
+              "day": "WORK_DAY",
+              "startTime": "08:00",
+              "endTime": "14:00",
+              "source": "NEW",
+              "annotation": "Reduced hours of service (NOTAM)"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

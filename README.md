@@ -1,5 +1,9 @@
 # AIXM 5.1 Timesheet Viewer — prototype
 
+**Live demo:** https://ivan-vercinsky.github.io/aixm-timesheet-viewer/
+(deployed from `main` by GitHub Actions: lint + tests + build, see
+`.github/workflows/deploy.yml`)
+
 React + Vite prototype of a **calendar view for AIXM 5.1 time schedules**, aimed at
 Digital NOTAM coding support (e.g. rule **ER-06** of the **SAA.ACT** scenario: the
 TEMPDELTA must carry the full resulting schedule, i.e. new activations *plus* the
